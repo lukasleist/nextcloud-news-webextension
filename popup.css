@@ -1,0 +1,7 @@
+html {
+    width: 512px;
+}
+
+#nextcloud-link::before {
+    content: url('images/icon.svg');
+}
