@@ -17,6 +17,6 @@
     "manifest_version": 2,
     "name": "__MSG_nextcloudnewscheck_name__",
     "options_page": "config.html",
-    "permissions": ["alarms", "tabs", "webNavigation", "*://*/*"],
+    "permissions": ["alarms", "tabs", "webNavigation", "*://*/*", "background"],
     "version": "0.2"
 }

@@ -1,15 +1,27 @@
 <html>
-    <head>
-        <title>Nextcloud Newschecker</title>
-        <link rel="stylesheet" href="popup.css">
-        <script src="functions.js"></script>
-        <script src="popup.js"></script>
-    </head>
-    <body>
-        <a target="_blank" id="nextcloud-link">Go to Nextcloud-News</a>
-        <button id="refresh-button">Refresh</button>
-        <p id="feeds">Unread News</p>
-        <ul id="articles">
-        </ul>
-    </body>
+
+<head>
+    <title>Nextcloud Newschecker</title>
+    <link rel="stylesheet" href="popup.css">
+    <script src="functions.js"></script>
+    <script src="popup.js"></script>
+</head>
+
+<body>
+    <div class="wrapper">
+        <div class="header">
+            <a target="_blank" id="nextcloud-link"><span>Go to Nextcloud-News</span></a>
+            <div class="controls">
+                <button class="button" id="reload-button" title="Reload"></button>
+                <button class="button read-button" id="read-all-button" title="Mark All as Read"></button>
+            </div>
+        </div>
+        <div class="feed">
+        <h1>Unread Articles: <span id="unread-count"></span></h1>
+            <ul id="articles">
+            </ul>
+        </div>
+    </div>
+</body>
+
 </html>

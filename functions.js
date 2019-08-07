@@ -26,7 +26,8 @@ function performApiRequest(callback, url, method, body) {
     let options = {
         method: method,
         headers: {
-            "Authorization": "Basic " + btoa(getUsername() + ":" + getPassword())
+            "Authorization": "Basic " + btoa(getUsername() + ":" + getPassword()),
+			"OCS-APIREQUEST": "true"
         },
 
     };
