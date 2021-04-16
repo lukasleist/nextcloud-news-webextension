@@ -1,56 +1,92 @@
 function getNewsUrl() {
     if (localStorage["url"] != null) {
-        return localStorage.getItem("url");
+        return localStorage["url"] + "/index.php/apps/news";
+    }
+    return null;
+}
+
+function getNewsApiUrl(endpoint="") {
+    return "/index.php/apps/news/api/v1-2"+ endpoint;
+}
+
+function getAuthorizationHeader() {
+    return localStorage.getItem("authorization");
+}
+
+function fetchApi(endpoint, method="GET", body=undefined) {
+    if (localStorage["url"] != null) {
+        let url =  endpoint.startsWith("http") ? endpoint : localStorage.getItem("url") + endpoint;
+
+        let options = {
+            method: method,
+            headers: {
+                "OCS-APIREQUEST": "true",
+            },
+        };
+        
+        if(getAuthorizationHeader()) {
+            options.headers["Authorization"] = getAuthorizationHeader();
+        }
+    
+        if (body != undefined) {
+            options["body"] = JSON.stringify(body);
+            options.headers["Content-Type"] = "application/json";
+        }
+
+        return fetch(url, options);
     } else {
         console.log('No Nextcloud URL set');
     }
+    
 }
 
-function getUsername() {
-    return localStorage.getItem("username");
-}
-
-function getPassword() {
-    return localStorage.getItem("password");
-}
-
-function getApiUrl() {
-    return getNewsUrl() + "api/v1-2";
-}
-
-function performApiRequest(callback, url, method, body) {
-
-    if (!method) {
-        method = "GET";
+/**
+ * Removes existing authorization information
+ */
+function startLoginFlow(callback) {
+    localStorage.removeItem("authorization");
+    function loginSuccess(authResponse) {
+        console.log(authResponse);
+        localStorage.setItem("authorization", "Basic " + btoa(authResponse.loginName + ":" + authResponse.appPassword));
+        callback();
     }
-    let options = {
-        method: method,
-        headers: {
-            "Authorization": "Basic " + btoa(getUsername() + ":" + getPassword()),
-			"OCS-APIREQUEST": "true"
-        },
+    
+    fetchApi("/index.php/login/v2", "POST").then(response => {
+        response.json().then(flowInformation => {
+            let pollEndpoint = flowInformation.poll.endpoint;
+            let body = {
+                token: flowInformation.poll.token
+            };
+            
+            chrome.tabs.create({
+                url: flowInformation.login
+            });
 
-    };
-    if (body != undefined) {
-        options["body"] = body;
-        options.headers["Content-Type"] = "application/json";
-    }
-    fetch(getApiUrl() + url, options).then(
-        response => {
-            response.json().then(callback);
-        }
-    );
+            function poll(r) {
+                if(r.status == 404) {
+                    fetchApi(pollEndpoint, "POST", body).then(rr => {
+                        setTimeout(_ => poll(rr), 1000);
+                    })
+                } else {
+                    r.json().then(loginSuccess);
+                }
+                
+            }
+
+            poll({status: 404});
+        });
+    });
 }
 
 function updateUnreadArticles(callback) {
-    performApiRequest(response => {
-        let articles = response.items;
-        localStorage.setItem("unreadArticles", JSON.stringify(articles));
-        if (callback != undefined) {
-            callback(articles);
-        }
-
-    }, "/items?type=3&getRead=false&batchSize=-1");
+    fetchApi(getNewsApiUrl("/items?type=3&getRead=false&batchSize=-1")).then(response => {
+        response.json().then(articles => {
+            localStorage.setItem("unreadArticles", JSON.stringify(articles.items));
+            if (callback != undefined) {
+                callback(articles.items);
+            }
+        });
+    });
 }
 
 function getUnreadArticles() {
@@ -89,10 +125,12 @@ function markAsRead(callback, items) {
     }
     console.log(items);
 
-    body = JSON.stringify({
-        "items": items
+    body = {
+        items: items
+    };
+    fetchApi(getNewsApiUrl("/items/read/multiple"), "PUT", body).then(response => {
+        callback(response.json())
     });
-    performApiRequest(callback, "/items/read/multiple", "PUT", body);
 }
 
 function markAllAsRead(callback) {

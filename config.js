@@ -1,11 +1,13 @@
 function handleClick(event) {
 	var input = document.getElementById("url");
 	var url = input.value;
-	if (url[url.length - 1] != '/') {
-		url = url + "/";
+	if (url[url.length - 1] == '/') {
+		url = url.slice(0, -1);
 	}
 	localStorage["url"] = url;
-	
+	startLoginFlow(_ => {
+		console.log("Successfully Logged in")
+	});
 	event.preventDefault();
 }
 
