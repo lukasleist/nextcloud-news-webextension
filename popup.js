@@ -5,6 +5,8 @@ document.addEventListener("DOMContentLoaded", function () {
     });
     document.getElementById("read-all-button").addEventListener("click", event => {
         console.log("Mark all as read");
+        document.getElementById("articles").innerHTML = "";
+        markAllAsRead(_ => {});
     })
     updateUi()
 });

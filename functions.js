@@ -95,6 +95,12 @@ function markAsRead(callback, items) {
     performApiRequest(callback, "/items/read/multiple", "PUT", body);
 }
 
+function markAllAsRead(callback) {
+    items = getUnreadArticles();
+    ids = items.map(item => item.id).slice(0, 99);
+    markAsRead(callback, ids);
+}
+
 function update(callback) {
     updateUnreadCount(callback);
 }
