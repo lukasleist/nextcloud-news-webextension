@@ -5,14 +5,12 @@ function handleClick(event) {
 		url = url + "/";
 	}
 	localStorage["url"] = url;
-	localStorage["username"] = document.getElementById("username").value;
-	localStorage["password"] = document.getElementById("password").value;
+	
 	event.preventDefault();
 }
 
 document.addEventListener('DOMContentLoaded', function () {
 	var url_input = document.getElementById("url");
-	var un_input = document.getElementById("username");
 	var url = localStorage["url"];
 	var un = localStorage["username"];
 	if (url != null) {

@@ -1,4 +1,4 @@
-news-chrome-notifier
-====================
+# Nextcloud News Checker
+## Chrome Extension for Nextcloud News
 
-A simple google chrome plugin that shows unread ownCloud News app items. Heavily based off the google gmail checker.
+A simple google chrome extension that shows unread Nextcloud News app items.
