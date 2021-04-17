@@ -14,21 +14,27 @@ document.addEventListener("DOMContentLoaded", function () {
 
 function updateUi() {
 
-    let url = getNewsUrl();
-    let linkElement = document.getElementById("nextcloud-link")
-    if (url) {
-        linkElement.setAttribute("href", url);
-    } else {
-        linkElement.innerHTML = "URL not set, go to config"
-        linkElement.setAttribute("href", "/config.html");
-    }
-    document.getElementById("unread-count").innerHTML = `Unread articles: ${getUnreadCount()}`;
+    getNewsUrl(url => {
+        let linkElement = document.getElementById("nextcloud-link")
+        if (url) {
+            linkElement.setAttribute("href", url);
+        } else {
+            linkElement.innerHTML = "URL not set, or not authenticated: go to config"
+            linkElement.setAttribute("href", "/config.html");
+        }
+    });
+
+    getUnreadCount(count => {
+        document.getElementById("unread-count").innerHTML = `Unread articles: ${count}`;
+    });
 
     let ul = document.getElementById("articles");
     ul.innerHTML = "";
-    for (let article of getUnreadArticles()) {
-        ul.appendChild(renderArticle(article));
-    }
+    getUnreadArticles((articles) => {
+        for (let article of articles) {
+            ul.appendChild(renderArticle(article));
+        }
+    });
 }
 
 function renderArticle(article) {
