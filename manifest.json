@@ -1,6 +1,7 @@
 {
     "manifest_version": 3,
-    "name": "__MSG_nextcloudnewscheck_name__",
+    "name": "__MSG_extName__",
+    "description": "__MSG_extDescription__",
     "options_page": "config.html",
     "background": {
         "service_worker": "background.js"
@@ -12,7 +13,6 @@
         "default_popup": "popup.html"
     },
     "default_locale": "en",
-    "description": "__MSG_nextcloudnewscheck_description__",
     "icons": {
         "128": "images/icon128.png"
     },

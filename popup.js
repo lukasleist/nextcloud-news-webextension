@@ -21,13 +21,12 @@ function updateUi() {
         let linkElement = document.getElementById("nextcloud-link")
 
         if (authorization && url != null) {
+            linkElement.innerHTML = chrome.i18n.getMessage("openNextcloudNews");
             linkElement.setAttribute("href", url);
 
-            if (unreadCount) {
-                document.getElementById("unread-count").innerHTML = `Unread articles: ${unreadCount}`;
-            } else {
-                document.getElementById("unread-count").innerHTML = `Unread articles: 0`;
-            }
+            document.getElementById("unread-count").innerHTML = chrome.i18n.getMessage("unreadArticlesHeading", [
+                (unreadCount) ? unreadCount : 0
+            ]);
             if(unreadArticles) {
                 let ul = document.getElementById("articles");
                 ul.innerHTML = "";
@@ -36,7 +35,7 @@ function updateUi() {
                 }
             }
         } else {
-            linkElement.innerHTML = "URL not set, or not authenticated: go to config"
+            linkElement.innerHTML = chrome.i18n.getMessage("notAuthenticated");
             linkElement.setAttribute("href", "/config.html");
         }
     });

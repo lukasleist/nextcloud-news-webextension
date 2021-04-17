@@ -26,8 +26,7 @@ function fetchApi(endpoint, method="GET", body=undefined) {
     
             return fetch(url, options);
         } else {
-            //console.log(chrome.i18n.getMessage("owncloudnewscheck_url_error"));
-            return Promise.reject("No Nextcloud url set or not yet authorized");
+            return Promise.reject(chrome.i18n.getMessage("notAuthenticated"));
         }
     });
 }
@@ -53,7 +52,8 @@ function update() {
 
 update();
 
-const periodInMinutes = 0.2;
+//const periodInMinutes = 0.2;
+const periodInMinutes = 10;
 chrome.alarms.create('refresh', {periodInMinutes: periodInMinutes});
 chrome.alarms.onAlarm.addListener(update);
 console.log(`Scheduled refresh to run every ${periodInMinutes} minutes`);

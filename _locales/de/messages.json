@@ -1,0 +1,31 @@
+{
+   "extName": {
+      "message": "Nextcloud News Checker"
+   },
+   "extDescription": {
+      "message": "Zeigt ungelesene Artikel aus der Nextcloud News App an."
+   },
+   "notAuthenticated": {
+      "message": "Anmeldung am Nextcloud Server fehlgeschlagen: Zum Anmelden in das Optionsmenü"
+   },
+   "openNextcloudNews": {
+      "message": "Nextcloud News App öffnen"
+   },
+   "reloadTitle": {
+      "message": "Aktualisieren"
+   },
+   "markAllAsReadTitle": {
+      "message": "Alle Artikel als gelesen markieren"
+   },
+   "markAsReadTitle": {
+      "message": "als gelesen markieren"
+   },
+   "unreadArticlesHeading": {
+      "message": "Ungelesene Artikel: $count$",
+      "placeholders": {
+         "count": {
+            "content": "$1"
+         }
+      }
+   }
+}

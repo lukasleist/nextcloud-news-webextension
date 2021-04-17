@@ -1,28 +1,31 @@
 {
-   "nextcloudnewscheck_description": {
-      "message": "Displays the number of unread messages in your ownCloud News App. You can also click the button to open your feeds."
+   "extName": {
+      "message": "Nextcloud News Checker"
    },
-   "nextcloudnewscheck_exception": {
-      "message": "exception: $1",
+   "extDescription": {
+      "message": "Displays unread articles from the Nextcloud News App"
+   },
+   "notAuthenticated": {
+      "message": "Nextcloud Server not authenticated: Authenticate in the Options Menu"
+   },
+   "openNextcloudNews": {
+      "message": "Open Nextcloud News App"
+   },
+   "reloadTitle": {
+      "message": "Reload"
+   },
+   "markAllAsReadTitle": {
+      "message": "Mark all articles as read"
+   },
+   "markAsReadTitle": {
+      "message": "mark as read"
+   },
+   "unreadArticlesHeading": {
+      "message": "Unread Articles: $count$",
       "placeholders": {
-         "1": {
+         "count": {
             "content": "$1"
          }
       }
-   },
-   "nextcloudnewscheck_name": {
-      "message": "Nextcloud News Checker"
-   },
-   "nextcloudnewscheck_url_error": {
-      "message": "No ownCloud URL configured"
-   },
-   "nextcloudnewscheck_login_error": {
-      "message": "Error: ownCloud authentication failed"
-   },
-   "nextcloudnewscheck_ajax_error": {
-      "message": "Error: Ajax query return with unknown status code"
-   },
-   "nextcloudnewscheck_node_error": {
-      "message": "Error: Either <feed> or <unreadCount> attribute not found"
    }
 }
