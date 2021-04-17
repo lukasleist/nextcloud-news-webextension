@@ -1,26 +1,88 @@
-importScripts("functions.js");
-
-function onAlarm(alarm) {
-	console.log('Got alarm', alarm);
-	update();
+function fetchApi(endpoint, method="GET", body=undefined) {
+    return new Promise((resolve) => {
+        chrome.storage.local.get(["url", "authorization"], resolve)
+    }).then(({url, authorization}) => {
+        if(authorization) {
+            url = url + endpoint;
+        } else {
+            url = endpoint;
+        }
+        if (url.startsWith("http")) {
+            let options = {
+                method: method,
+                headers: {
+                    "OCS-APIREQUEST": "true",
+                },
+            };
+            
+            if(authorization) {
+                options.headers["Authorization"] = authorization;
+            }
+        
+            if (body != undefined) {
+                options["body"] = JSON.stringify(body);
+                options.headers["Content-Type"] = "application/json";
+            }
+    
+            return fetch(url, options);
+        } else {
+            //console.log(chrome.i18n.getMessage("owncloudnewscheck_url_error"));
+            return Promise.reject("No Nextcloud url set or not yet authorized");
+        }
+    });
 }
 
-function scheduleAlarm() {
-	const periodInMinutes = 10;
-	chrome.alarms.create('refresh', {periodInMinutes: periodInMinutes});
-	console.log(`Scheduled refresh to run every ${periodInMinutes} minutes`);
+function update() {
+    fetchApi("/index.php/apps/news/api/v1-2/items?type=3&getRead=false&batchSize=-1").then(response => {
+        response.json().then(articles => {
+            let unreadCount = articles.items.length;
+            console.log(`Fetched ${unreadCount} unread articles`);
+            chrome.action.setBadgeText({
+                text: "" + unreadCount
+            });
+            
+            chrome.storage.local.set({
+                unreadArticles: articles.items,
+                unreadCount: unreadCount
+            }, () => {
+				chrome.runtime.sendMessage({command: "updateUi"});
+			});
+        });
+    }).catch(console.log);
 }
 
-function init() {
-	chrome.runtime.onInstalled.addListener(scheduleAlarm);
-	chrome.runtime.onStartup.addListener(() => {
-		onAlarm();
-		scheduleAlarm();
-	});
-	chrome.alarms.onAlarm.addListener(onAlarm);
-}
+update();
 
-init();
+const periodInMinutes = 0.2;
+chrome.alarms.create('refresh', {periodInMinutes: periodInMinutes});
+chrome.alarms.onAlarm.addListener(update);
+console.log(`Scheduled refresh to run every ${periodInMinutes} minutes`);
+
+chrome.runtime.onMessage.addListener(({command, callback, articleIds}) => {
+	if(command == "update") {
+		update();
+	}
+	if(command == "markAsRead") {
+		
+		function markAsRead(items) {
+			if (!(items instanceof Array)) {
+				items = [items];
+			}
+			fetchApi("/index.php/apps/news/api/v1-2/items/read/multiple", "PUT", {
+				items: items
+			}).then(response => response.json()).then(update);   
+		}
+		if(!articleIds) {	//if no particular ids are given, mark all as read
+			chrome.storage.local.get("unreadArticles", ({unreadArticles}) => {
+				if(unreadArticles) {
+					ids = unreadArticles.map(item => item.id).slice(0, 99);
+					markAsRead(ids);
+				} 
+			});
+		}
+		markAsRead(articleIds);
+	}
+});
 
 chrome.storage.local.onChanged.addListener(({url}) => {
 	if(url) {
@@ -28,16 +90,13 @@ chrome.storage.local.onChanged.addListener(({url}) => {
 		chrome.storage.local.remove("authorization", () => {
 		
 			function loginSuccess(authResponse) {
-				console.log(authResponse);
 				chrome.storage.local.set({
 					authorization: "Basic " + btoa(authResponse.loginName + ":" + authResponse.appPassword)
 				}, () => {
-					console.log("Completed Login Flow Successfully")
+					console.log("Login Flow Completed Successfully")
 					update();
 				});
 			}
-			
-			console.log(`Starting Login Flow:`);
 	
 			fetchApi(url.newValue + "/index.php/login/v2", "POST").then(response => {
 				response.json().then(flowInformation => {
@@ -53,7 +112,7 @@ chrome.storage.local.onChanged.addListener(({url}) => {
 					function poll(r) {
 						if(r.status == 404) {
 							fetchApi(pollEndpoint, "POST", body).then(rr => {						
-								setTimeout(_ => poll(rr), 1000);
+								setTimeout(_ => poll(rr), 1500);
 							})
 						} else {
 							r.json().then(loginSuccess);

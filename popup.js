@@ -1,50 +1,48 @@
 document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("reload-button").addEventListener("click", event => {
-        console.log("Reload");
-        update(_ => updateUi());
+        triggerUpdate();
     });
     document.getElementById("read-all-button").addEventListener("click", event => {
-        console.log("Mark all as read");
         document.getElementById("articles").innerHTML = "";
-        markAllAsRead(_ => {});
+        markAsRead();
     })
     updateUi()
+    chrome.runtime.onMessage.addListener(({command}) => {
+        if(command == "updateUi") {
+            updateUi();
+        }
+    })
 });
 
-
 function updateUi() {
-
-    getNewsUrl(url => {
+    chrome.storage.local.get(["url", "authorization", "unreadCount", "unreadArticles"], ({
+        url, authorization, unreadCount, unreadArticles
+    }) => {
         let linkElement = document.getElementById("nextcloud-link")
-        if (url) {
+
+        if (authorization && url != null) {
             linkElement.setAttribute("href", url);
+
+            if (unreadCount) {
+                document.getElementById("unread-count").innerHTML = `Unread articles: ${unreadCount}`;
+            } else {
+                document.getElementById("unread-count").innerHTML = `Unread articles: 0`;
+            }
+            if(unreadArticles) {
+                let ul = document.getElementById("articles");
+                ul.innerHTML = "";
+                for (let article of unreadArticles) {
+                    ul.appendChild(renderArticle(article));
+                }
+            }
         } else {
             linkElement.innerHTML = "URL not set, or not authenticated: go to config"
             linkElement.setAttribute("href", "/config.html");
         }
     });
-
-    getUnreadCount(count => {
-        document.getElementById("unread-count").innerHTML = `Unread articles: ${count}`;
-    });
-
-    let ul = document.getElementById("articles");
-    ul.innerHTML = "";
-    getUnreadArticles((articles) => {
-        for (let article of articles) {
-            ul.appendChild(renderArticle(article));
-        }
-    });
 }
 
 function renderArticle(article) {
-    let li = document.createElement("li");
-
-    function markAsReadListener(_) {
-        markAsRead(response => { }, article.id);
-        a.parentElement.parentElement.remove();
-    }
-
     let template = document.createElement("template");
     template.innerHTML = `
         <li>
@@ -59,11 +57,19 @@ function renderArticle(article) {
     let a = template.content.querySelector(".title");
     a.addEventListener("click", _ => {
         chrome.tabs.create({ url: article.url, active: false });
-        markAsReadListener();
+        markAsRead(article.id);
     });
 
     let readButton = template.content.querySelector(".read-button");
-    readButton.addEventListener("click", markAsReadListener);
+    readButton.addEventListener("click", _ => markAsRead(article.id));
 
     return template.content;
+}
+
+function markAsRead(articleIds) {
+    chrome.runtime.sendMessage({command: "markAsRead", articleIds: articleIds});
+}
+
+function triggerUpdate() {
+    chrome.runtime.sendMessage({command: "update"});
 }
