@@ -22,7 +22,7 @@ function updateUi() {
 
         if (authorization && url != null) {
             linkElement.innerHTML = chrome.i18n.getMessage("openNextcloudNews");
-            linkElement.setAttribute("href", url);
+            linkElement.setAttribute("href", url + "/index.php/apps/news/");
 
             document.getElementById("unread-count").innerHTML = chrome.i18n.getMessage("unreadArticlesHeading", [
                 (unreadCount) ? unreadCount : 0

@@ -16,7 +16,7 @@
     "icons": {
         "128": "images/icon128.png"
     },
-    "permissions": ["alarms", "tabs", "storage", "background"],
+    "permissions": ["alarms", "storage", "background"],
     "host_permissions": ["*://*/*"],
-    "version": "0.2"
+    "version": "0.3"
 }

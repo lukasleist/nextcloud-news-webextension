@@ -26,7 +26,7 @@ function fetchApi(endpoint, method="GET", body=undefined) {
     
             return fetch(url, options);
         } else {
-            return Promise.reject(chrome.i18n.getMessage("notAuthenticated"));
+            return Promise.reject("notAuthenticated");
         }
     });
 }
