@@ -16,8 +16,8 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 function updateUi() {
-	chrome.storage.local.get(["url", "authorization", "unreadCount", "unreadArticles"], ({
-		url, authorization, unreadCount, unreadArticles
+	chrome.storage.local.get(["url", "authorization", "unreadCount", "unreadArticles", "feedMetadata"], ({
+		url, authorization, unreadCount, unreadArticles, feedMetadata
 	}) => {
 		let linkElement = document.getElementById("nextcloud-link")
 
@@ -31,9 +31,12 @@ function updateUi() {
 			if (unreadArticles) {
 				let ul = document.getElementById("articles");
 				ul.innerHTML = "";
-				for (let article of unreadArticles) {
-					ul.appendChild(renderArticle(article));
-				}
+
+				unreadArticles.sort((a, b) => {
+					return (a.pubDate > b.pubDate) ? -1 : (a.pubDate < b.pubDate) ? 1 : 0
+				}, this).forEach((article) => {
+					ul.appendChild(renderArticle(article, feedMetadata));
+				}, this)
 			}
 		} else {
 			linkElement.innerHTML = chrome.i18n.getMessage("notAuthenticated");
@@ -42,7 +45,20 @@ function updateUi() {
 	});
 }
 
-function renderArticle(article) {
+function renderArticle(article, feedMetadata) {
+	//calculate the domain for the icon and site link.
+	const protoMatchRegex = /https:\/\//gm;
+	feed = feedMetadata[article.feedId]
+	console.log("article", article, "feed", feed)
+	//This needs to check for the link in the full rss feed. If the rss feed has a link, use that. otherwise, default to the url in the feed.
+	let sourceURL = feed.link ? feed.link : article.url
+	//articleDomain is JUST the domain portion for usage in getting the ico.
+	let articleDomain = sourceURL.replace('http://', '').replace('https://', '').split(/[/?#]/)[0]
+	//domainLink is the link that you go to if you click on the "author" instead of the article.
+	let domainLink = (protoMatchRegex.exec(sourceURL) ? "https://" : "http://") + articleDomain
+	let articleLinkText = feed.title ? feed.title : (article.author === "" ? articleDomain : article.author)
+	let articleAge = this.millisecondsToStr(Date.now() / 1000 - (article.pubDate))
+
 	let template = document.createElement("template");
 	template.innerHTML = `
         <li>
@@ -52,12 +68,21 @@ function renderArticle(article) {
                 </a>
                 <button title="${chrome.i18n.getMessage("markAsReadTitle")}" class="button read-button"></button>
             </div>
+			<div class="site-info">
+				<img class="site-icon" height="16" width="16" src='https://icons.duckduckgo.com/ip3/${articleDomain}.ico' />
+				<a class="site-link" href="${domainLink}">${articleLinkText}</a><p class="article-age">, ${articleAge} ago</p>
+            </div>
         </li>
     `;
-	let a = template.content.querySelector(".title");
-	a.addEventListener("click", _ => {
+	let titleAnchorSelector = template.content.querySelector(".title");
+	titleAnchorSelector.addEventListener("click", _ => {
 		chrome.tabs.create({ url: article.url, active: false });
 		markAsRead(article.id);
+	});
+	let siteAnchorSelector = template.content.querySelector(".site-link");
+	siteAnchorSelector.addEventListener("click", _ => {
+		chrome.tabs.create({ url: domainLink, active: false });
+		// markAsRead(article.id);
 	});
 
 	let readButton = template.content.querySelector(".read-button");
@@ -89,3 +114,31 @@ function updatePopupLocalizations() {
 
 }
 
+
+function millisecondsToStr(seconds) {
+	//TODO localize
+
+	function numberEnding(number) {
+		return (number > 1) ? 's' : '';
+	}
+
+	var temp = seconds
+	//TODO: Months or weeks? 
+	var days = Math.floor((temp %= 31536000) / 86400);
+	if (days) {
+		return days + ' day' + numberEnding(days);
+	}
+	var hours = Math.floor((temp %= 86400) / 3600);
+	if (hours) {
+		return hours + ' hour' + numberEnding(hours);
+	}
+	var minutes = Math.floor((temp %= 3600) / 60);
+	if (minutes) {
+		return minutes + ' minute' + numberEnding(minutes);
+	}
+	var seconds = temp % 60;
+	if (seconds) {
+		return seconds + ' second' + numberEnding(seconds);
+	}
+	return 'less than a second'; //'just now' //or other string you like;
+}
