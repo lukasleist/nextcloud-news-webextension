@@ -34,9 +34,11 @@ function updateUi() {
 
 				unreadArticles.sort((a, b) => {
 					return (a.pubDate > b.pubDate) ? -1 : (a.pubDate < b.pubDate) ? 1 : 0
-				}, this).forEach((article) => {
-					ul.appendChild(renderArticle(article, feedMetadata));
 				}, this)
+
+				for (const article in unreadArticles) {
+					ul.appendChild(renderArticle(unreadArticles[article], feedMetadata));
+				}
 			}
 		} else {
 			linkElement.innerHTML = chrome.i18n.getMessage("notAuthenticated");
@@ -56,8 +58,30 @@ function renderArticle(article, feedMetadata) {
 	let articleDomain = sourceURL.replace('http://', '').replace('https://', '').split(/[/?#]/)[0]
 	//domainLink is the link that you go to if you click on the "author" instead of the article.
 	let domainLink = (protoMatchRegex.exec(sourceURL) ? "https://" : "http://") + articleDomain
-	let articleLinkText = feed.title ? feed.title : (article.author === "" ? articleDomain : article.author)
+	let faviconSrc = `https://icons.duckduckgo.com/ip3/${articleDomain}.ico`
+	if (feed.faviconLink) {
+		faviconSrc = feed.faviconLink
+	}
+
+	let articleLinkText = feed.title ? feed.title : (article.author ? article.author : articleDomain)
 	let articleAge = this.millisecondsToStr(Date.now() / 1000 - (article.pubDate))
+
+	let bodyContent = ""
+	if (article.body) {
+		bodyContent += article.body
+	}
+	if (article.mediaThumbnail) {
+		bodyContent += `
+		<img src="${article.mediaThumbnail}">
+		`
+	}
+	if (article.mediaDescription) {
+		bodyContent += `
+		<p>${article.mediaDescription}</p>
+		`
+	}
+
+	let bodyID = `body-${article.id}`
 
 	let template = document.createElement("template");
 	template.innerHTML = `
@@ -66,27 +90,51 @@ function renderArticle(article, feedMetadata) {
                 <a href="${article.url}" class="title">
                     ${article.title}
                 </a>
-                <button title="${chrome.i18n.getMessage("markAsReadTitle")}" class="button read-button"></button>
+				<div class="buttonSet">
+					<button title="${chrome.i18n.getMessage("expandShowExtraContent")}" class="button body-button hide-body" id="${bodyID}-button"></button>
+					<button title="${chrome.i18n.getMessage("markAsReadTitle")}" class="button read-button"></button>
+				</div>
             </div>
 			<div class="site-info">
-				<img class="site-icon" height="16" width="16" src='https://icons.duckduckgo.com/ip3/${articleDomain}.ico' />
+				<img class="site-icon" height="16" width="16" src='${faviconSrc}' />
 				<a class="site-link" href="${domainLink}">${articleLinkText}</a><p class="article-age">, ${articleAge} ago</p>
             </div>
+			<div class="body-info hide-body" id="${bodyID}-body">
+				<p>${article.author}</p>
+				${bodyContent}
+			</div>
         </li>
     `;
+
 	let titleAnchorSelector = template.content.querySelector(".title");
 	titleAnchorSelector.addEventListener("click", _ => {
 		chrome.tabs.create({ url: article.url, active: false });
 		markAsRead(article.id);
 	});
+
 	let siteAnchorSelector = template.content.querySelector(".site-link");
 	siteAnchorSelector.addEventListener("click", _ => {
 		chrome.tabs.create({ url: domainLink, active: false });
-		// markAsRead(article.id);
 	});
 
 	let readButton = template.content.querySelector(".read-button");
 	readButton.addEventListener("click", _ => markAsRead(article.id));
+
+	let expandButton = template.content.querySelector(".body-button");
+	expandButton.addEventListener("click", _ => {
+		let cl = document.querySelector(`#${bodyID}-body`).classList
+		if (cl.contains("hide-body")) {
+			cl.remove("hide-body")
+		} else {
+			cl.add("hide-body")
+		}
+		cl = document.querySelector(`#${bodyID}-button`).classList
+		if (cl.contains("hide-body")) {
+			cl.remove("hide-body")
+		} else {
+			cl.add("hide-body")
+		}
+	});
 
 	return template.content;
 }
