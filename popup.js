@@ -102,8 +102,7 @@ function renderArticle(article, feedMetadata) {
 				</div>
             </div>
 			<div class="body-info hide-body" id="${bodyID}-body">
-				<p>${article.author}</p>
-				${bodyContent}
+				
 			</div>
         </li>
     `;
@@ -124,18 +123,16 @@ function renderArticle(article, feedMetadata) {
 
 	let expandButton = template.content.querySelector(".body-button");
 	expandButton.addEventListener("click", _ => {
-		let cl = document.querySelector(`#${bodyID}-body`).classList
+		let previewContainer = document.querySelector(`#${bodyID}-body`);
+		let cl = previewContainer.classList;
+
 		if (cl.contains("hide-body")) {
 			cl.remove("hide-body")
+			previewContainer.innerHTML = `<p>${article.author}</p> 	${bodyContent}`;
 		} else {
 			cl.add("hide-body")
 		}
-		cl = document.querySelector(`#${bodyID}-button`).classList
-		if (cl.contains("hide-body")) {
-			cl.remove("hide-body")
-		} else {
-			cl.add("hide-body")
-		}
+		
 	});
 
 	return template.content;
