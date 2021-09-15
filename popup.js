@@ -87,17 +87,19 @@ function renderArticle(article, feedMetadata) {
 	template.innerHTML = `
         <li>
             <div class="article">
-                <a href="${article.url}" class="title">
-                    ${article.title}
-                </a>
-				<div class="buttonSet">
+				<div>
+					<a href="${article.url}" class="title">
+						${article.title}
+					</a>
+					<div class="site-info">
+						<img class="site-icon" height="16" width="16" src='${faviconSrc}' />
+						<span class="article-teaser"><a class="site-link" href="${domainLink}">${articleLinkText}</a><span class="article-age">, ${articleAge} ago</span></span>
+					</div>
+				</div>
+				<div class="button-set">
 					<button title="${chrome.i18n.getMessage("expandShowExtraContent")}" class="button body-button hide-body" id="${bodyID}-button"></button>
 					<button title="${chrome.i18n.getMessage("markAsReadTitle")}" class="button read-button"></button>
 				</div>
-            </div>
-			<div class="site-info">
-				<img class="site-icon" height="16" width="16" src='${faviconSrc}' />
-				<a class="site-link" href="${domainLink}">${articleLinkText}</a><p class="article-age">, ${articleAge} ago</p>
             </div>
 			<div class="body-info hide-body" id="${bodyID}-body">
 				<p>${article.author}</p>
