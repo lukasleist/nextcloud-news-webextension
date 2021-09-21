@@ -27,5 +27,38 @@
             "content": "$1"
          }
       }
+   },
+   "daysAgo": {
+      "message": "vor $days$ Tagen",
+      "placeholders": {
+         "days": {
+            "content": "$1"
+         }
+      }
+   },
+   "oneDayAgo": {
+      "message": "vor einem Tag"
+   },
+   "hoursAgo": {
+      "message": "vor $hours$ Stunden",
+      "placeholders": {
+         "hours": {
+            "content": "$1"
+         }
+      }
+   },
+   "oneHourAgo": {
+      "message": "vor einer Stunde"
+   },
+   "minutesAgo": {
+      "message": "vor $minutes$ Minuten",
+      "placeholders": {
+         "minutes": {
+            "content": "$1"
+         }
+      }
+   },
+   "justNow": {
+      "message": "vor weniger als einer Minute"
    }
 }

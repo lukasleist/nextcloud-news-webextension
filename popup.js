@@ -93,7 +93,7 @@ function renderArticle(article, feedMetadata) {
 					</a>
 					<div class="site-info">
 						<img class="site-icon" height="16" width="16" src='${faviconSrc}' />
-						<span class="article-teaser"><a class="site-link" href="${domainLink}">${articleLinkText}</a><span class="article-age">, ${articleAge} ago</span></span>
+						<span class="article-teaser"><a class="site-link" href="${domainLink}">${articleLinkText}</a><span class="article-age">, ${articleAge}</span></span>
 					</div>
 				</div>
 				<div class="button-set">
@@ -154,7 +154,6 @@ function updatePopupLocalizations() {
 	let readAllElement = document.getElementById("read-all-button")
 	readAllElement.setAttribute("title", chrome.i18n.getMessage("markAllAsReadTitle"))
 
-
 	//not strictly necessary as not shown, but good practice I think.
 	let titleElement = document.getElementById("title")
 	titleElement.innerHTML = chrome.i18n.getMessage("extName")
@@ -163,29 +162,24 @@ function updatePopupLocalizations() {
 
 
 function millisecondsToStr(seconds) {
-	//TODO localize
-
-	function numberEnding(number) {
-		return (number > 1) ? 's' : '';
-	}
-
-	var temp = seconds
-	//TODO: Months or weeks? 
-	var days = Math.floor((temp %= 31536000) / 86400);
+	let temp = seconds
+	let days = Math.floor((temp %= 31536000) / 86400);
 	if (days) {
-		return days + ' day' + numberEnding(days);
+		if(days == 1)
+			return chrome.i18n.getMessage("oneDayAgo")
+		else
+			return chrome.i18n.getMessage("daysAgo", [days])
 	}
-	var hours = Math.floor((temp %= 86400) / 3600);
+	let hours = Math.floor((temp %= 86400) / 3600);
 	if (hours) {
-		return hours + ' hour' + numberEnding(hours);
+		if(hours == 1)
+			return chrome.i18n.getMessage("oneHourAgo")
+		else
+			return chrome.i18n.getMessage("hoursAgo", [hours])
 	}
 	var minutes = Math.floor((temp %= 3600) / 60);
-	if (minutes) {
-		return minutes + ' minute' + numberEnding(minutes);
+	if (minutes && minutes > 1) {
+		return chrome.i18n.getMessage("minutesAgo", [minutes])
 	}
-	var seconds = temp % 60;
-	if (seconds) {
-		return seconds + ' second' + numberEnding(seconds);
-	}
-	return 'less than a second'; //'just now' //or other string you like;
+	return chrome.i18n.getMessage("justNow");
 }
