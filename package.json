@@ -1,0 +1,23 @@
+{
+  "name": "nextcloud-news-webextension",
+  "version": "0.5.0",
+  "description": "A simple extension for Google Chrome or Mozilla Firefox that displays unread articles from the Nextcloud News App",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lukasleist/news-chrome-notifier.git"
+  },
+  "author": "Lukas Leist",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/lukasleist/news-chrome-notifier/issues"
+  },
+  "homepage": "https://github.com/lukasleist/news-chrome-notifier#readme",
+  "devDependencies": {
+    "vite-plugin-web-extension": "^1.4.6"
+  },
+  "scripts": {
+    "dev": "vite build --watch",
+    "build": "vite build"
+  }
+}

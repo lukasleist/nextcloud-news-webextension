@@ -1,5 +1,5 @@
-# Nextcloud News Checker
-## Chrome Extension for Nextcloud News
+# Nextcloud News Webextension
+## Webextension for Nextcloud News
 
 A simple Google Chrome extension that displays unread articles from the [Nextcloud News App](https://github.com/nextcloud/news).
 
@@ -12,7 +12,7 @@ A simple Google Chrome extension that displays unread articles from the [Nextclo
 ## Installation
 [![Nextcloud News Checker in the Chrome Web Store](https://storage.googleapis.com/chrome-gcs-uploader.appspot.com/image/WlD8wC6g8khYWPJUsQceQkhXSlv1/UV4C4ybeBTsZt43U4xis.png "Chrome Web Store")](https://chrome.google.com/webstore/detail/nextcloud-news-checker/ehefnhcojbpkophibijadabacoakondh)
 
-Install this extension either via the [Chrome Web Store](https://chrome.google.com/webstore/detail/nextcloud-news-checker/ehefnhcojbpkophibijadabacoakondh) or Download the [Extension file](./nextcloud-news-checker.crx)
+Install this extension either via the [Chrome Web Store](https://chrome.google.com/webstore/detail/nextcloud-news-checker/ehefnhcojbpkophibijadabacoakondh) or Download the [Extension file](https://github.com/lukasleist/news-chrome-notifier/releases/download/v0.4/nextcloud-news-checker.crx) from the [releases page](https://github.com/lukasleist/news-chrome-notifier/releases/).
 
 ## Known Issues
 
@@ -21,4 +21,4 @@ Install this extension either via the [Chrome Web Store](https://chrome.google.c
 
 ## Screenshots
 
-![Screenshort](./screenshots/Screenshot-de.png)
+![Screenshort](./screenshots/Screenshot-en.png)

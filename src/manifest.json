@@ -1,0 +1,20 @@
+{
+    "manifest_version": 3,
+    "description": "__MSG_extDescription__",
+    "options_page": "options/index.html",
+    "background": {
+        "service_worker": "background.js"
+    },
+    "action": {
+        "default_icon": {
+            "128": "assets/images/icon128.png"
+        },
+        "default_popup": "popup/index.html"
+    },
+    "default_locale": "en",
+    "icons": {
+        "128": "assets/images/icon128.png"
+    },
+    "permissions": ["alarms", "storage", "unlimitedStorage", "background"],
+    "host_permissions": ["*://*/*"]
+}

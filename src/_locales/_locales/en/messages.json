@@ -1,27 +1,24 @@
 {
-   "extName": {
-      "message": "Nextcloud News Checker"
-   },
    "extDescription": {
-      "message": "Zeigt ungelesene Artikel aus der Nextcloud News App an."
+      "message": "Displays unread articles from the Nextcloud News App"
    },
    "notAuthenticated": {
-      "message": "Anmeldung am Nextcloud Server fehlgeschlagen: Zum Anmelden in das Optionsmenü"
+      "message": "Nextcloud Server not authenticated: Authenticate in the Options Menu"
    },
    "openNextcloudNews": {
-      "message": "Nextcloud News App öffnen"
+      "message": "Open Nextcloud News App"
    },
    "reloadTitle": {
-      "message": "Aktualisieren"
+      "message": "Reload"
    },
    "markAllAsReadTitle": {
-      "message": "Alle Artikel als gelesen markieren"
+      "message": "Mark all articles as read"
    },
    "markAsReadTitle": {
-      "message": "als gelesen markieren"
+      "message": "mark as read"
    },
    "unreadArticlesHeading": {
-      "message": "Ungelesene Artikel: $count$",
+      "message": "Unread Articles: $count$",
       "placeholders": {
          "count": {
             "content": "$1"
@@ -29,7 +26,7 @@
       }
    },
    "daysAgo": {
-      "message": "vor $days$ Tagen",
+      "message": "$days$ days ago",
       "placeholders": {
          "days": {
             "content": "$1"
@@ -37,10 +34,10 @@
       }
    },
    "oneDayAgo": {
-      "message": "vor einem Tag"
+      "message": "one day ago"
    },
    "hoursAgo": {
-      "message": "vor $hours$ Stunden",
+      "message": "$hours$ hours ago",
       "placeholders": {
          "hours": {
             "content": "$1"
@@ -48,10 +45,10 @@
       }
    },
    "oneHourAgo": {
-      "message": "vor einer Stunde"
+      "message": "one hour ago"
    },
    "minutesAgo": {
-      "message": "vor $minutes$ Minuten",
+      "message": "$minutes$ minutes ago",
       "placeholders": {
          "minutes": {
             "content": "$1"
@@ -59,6 +56,6 @@
       }
    },
    "justNow": {
-      "message": "vor weniger als einer Minute"
+      "message": "just now"
    }
 }

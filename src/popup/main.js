@@ -42,7 +42,7 @@ function updateUi() {
 			}
 		} else {
 			linkElement.innerHTML = chrome.i18n.getMessage("notAuthenticated");
-			linkElement.setAttribute("href", "/config.html");
+			linkElement.setAttribute("href", "/options/index.html");
 		}
 	});
 }
@@ -50,7 +50,7 @@ function updateUi() {
 function renderArticle(article, feedMetadata) {
 	//calculate the domain for the icon and site link.
 	const protoMatchRegex = /https:\/\//gm;
-	feed = feedMetadata[article.feedId]
+	const feed = feedMetadata[article.feedId]
 	console.log("article", article, "feed", feed)
 	//This needs to check for the link in the full rss feed. If the rss feed has a link, use that. otherwise, default to the url in the feed.
 	let sourceURL = feed.link ? feed.link : article.url
@@ -64,7 +64,7 @@ function renderArticle(article, feedMetadata) {
 	}
 
 	let articleLinkText = feed.title ? feed.title : (article.author ? article.author : articleDomain)
-	let articleAge = this.millisecondsToStr(Date.now() / 1000 - (article.pubDate))
+	let articleAge = millisecondsToStr(Date.now() / 1000 - (article.pubDate))
 
 	let bodyContent = ""
 	if (article.body) {
@@ -153,11 +153,6 @@ function updatePopupLocalizations() {
 
 	let readAllElement = document.getElementById("read-all-button")
 	readAllElement.setAttribute("title", chrome.i18n.getMessage("markAllAsReadTitle"))
-
-	//not strictly necessary as not shown, but good practice I think.
-	let titleElement = document.getElementById("title")
-	titleElement.innerHTML = chrome.i18n.getMessage("extName")
-
 }
 
 

@@ -1,27 +1,24 @@
 {
-   "extName": {
-      "message": "Nextcloud News Checker"
-   },
    "extDescription": {
-      "message": "Displays unread articles from the Nextcloud News App"
+      "message": "Zeigt ungelesene Artikel aus der Nextcloud News App an."
    },
    "notAuthenticated": {
-      "message": "Nextcloud Server not authenticated: Authenticate in the Options Menu"
+      "message": "Anmeldung am Nextcloud Server fehlgeschlagen: Zum Anmelden in das Optionsmenü"
    },
    "openNextcloudNews": {
-      "message": "Open Nextcloud News App"
+      "message": "Nextcloud News App öffnen"
    },
    "reloadTitle": {
-      "message": "Reload"
+      "message": "Aktualisieren"
    },
    "markAllAsReadTitle": {
-      "message": "Mark all articles as read"
+      "message": "Alle Artikel als gelesen markieren"
    },
    "markAsReadTitle": {
-      "message": "mark as read"
+      "message": "als gelesen markieren"
    },
    "unreadArticlesHeading": {
-      "message": "Unread Articles: $count$",
+      "message": "Ungelesene Artikel: $count$",
       "placeholders": {
          "count": {
             "content": "$1"
@@ -29,7 +26,7 @@
       }
    },
    "daysAgo": {
-      "message": "$days$ days ago",
+      "message": "vor $days$ Tagen",
       "placeholders": {
          "days": {
             "content": "$1"
@@ -37,10 +34,10 @@
       }
    },
    "oneDayAgo": {
-      "message": "one day ago"
+      "message": "vor einem Tag"
    },
    "hoursAgo": {
-      "message": "$hours$ hours ago",
+      "message": "vor $hours$ Stunden",
       "placeholders": {
          "hours": {
             "content": "$1"
@@ -48,10 +45,10 @@
       }
    },
    "oneHourAgo": {
-      "message": "one hour ago"
+      "message": "vor einer Stunde"
    },
    "minutesAgo": {
-      "message": "$minutes$ minutes ago",
+      "message": "vor $minutes$ Minuten",
       "placeholders": {
          "minutes": {
             "content": "$1"
@@ -59,6 +56,6 @@
       }
    },
    "justNow": {
-      "message": "just now"
+      "message": "vor weniger als einer Minute"
    }
 }
