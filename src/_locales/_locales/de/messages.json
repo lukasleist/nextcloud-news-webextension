@@ -1,61 +1,70 @@
 {
-   "extDescription": {
-      "message": "Zeigt ungelesene Artikel aus der Nextcloud News App an."
-   },
-   "notAuthenticated": {
-      "message": "Anmeldung am Nextcloud Server fehlgeschlagen: Zum Anmelden in das Optionsmenü"
-   },
-   "openNextcloudNews": {
-      "message": "Nextcloud News App öffnen"
-   },
-   "reloadTitle": {
-      "message": "Aktualisieren"
-   },
-   "markAllAsReadTitle": {
-      "message": "Alle Artikel als gelesen markieren"
-   },
-   "markAsReadTitle": {
-      "message": "als gelesen markieren"
-   },
-   "unreadArticlesHeading": {
-      "message": "Ungelesene Artikel: $count$",
-      "placeholders": {
-         "count": {
-            "content": "$1"
-         }
+  "extDescription": {
+    "message": "Zeigt ungelesene Artikel aus der Nextcloud News App an."
+  },
+  "optionsPageTitle": {
+    "message": "Konfiguration: Nextcloud News"
+  },
+  "optionsPageHint": {
+    "message": "Geben Sie die URL Ihrer Nextcloud-Instanz ein."
+  },
+  "optionsPageHelp": {
+    "message": "Fügen Sie hier die URL einer Nextcloud-Instanz ein, bei der die <a target=\"_blank\" href=\"https://apps.nextcloud.com/apps/news\"  >Nextcloud-News</a> installiert ist. Für die Authorisierung werden sie im nächsten Schritt zu Ihrer Nextcloud Instanz weitergeleitet um diese Browsererweiterung zu Berechtigen."
+  },
+  "notAuthenticated": {
+    "message": "Anmeldung am Nextcloud Server fehlgeschlagen: Zum Anmelden in das Optionsmenü"
+  },
+  "openNextcloudNews": {
+    "message": "Nextcloud News App öffnen"
+  },
+  "reloadTitle": {
+    "message": "Aktualisieren"
+  },
+  "markAllAsReadTitle": {
+    "message": "Alle Artikel als gelesen markieren"
+  },
+  "markAsReadTitle": {
+    "message": "als gelesen markieren"
+  },
+  "unreadArticlesHeading": {
+    "message": "Ungelesene Artikel: $count$",
+    "placeholders": {
+      "count": {
+        "content": "$1"
       }
-   },
-   "daysAgo": {
-      "message": "vor $days$ Tagen",
-      "placeholders": {
-         "days": {
-            "content": "$1"
-         }
+    }
+  },
+  "daysAgo": {
+    "message": "vor $days$ Tagen",
+    "placeholders": {
+      "days": {
+        "content": "$1"
       }
-   },
-   "oneDayAgo": {
-      "message": "vor einem Tag"
-   },
-   "hoursAgo": {
-      "message": "vor $hours$ Stunden",
-      "placeholders": {
-         "hours": {
-            "content": "$1"
-         }
+    }
+  },
+  "oneDayAgo": {
+    "message": "vor einem Tag"
+  },
+  "hoursAgo": {
+    "message": "vor $hours$ Stunden",
+    "placeholders": {
+      "hours": {
+        "content": "$1"
       }
-   },
-   "oneHourAgo": {
-      "message": "vor einer Stunde"
-   },
-   "minutesAgo": {
-      "message": "vor $minutes$ Minuten",
-      "placeholders": {
-         "minutes": {
-            "content": "$1"
-         }
+    }
+  },
+  "oneHourAgo": {
+    "message": "vor einer Stunde"
+  },
+  "minutesAgo": {
+    "message": "vor $minutes$ Minuten",
+    "placeholders": {
+      "minutes": {
+        "content": "$1"
       }
-   },
-   "justNow": {
-      "message": "vor weniger als einer Minute"
-   }
+    }
+  },
+  "justNow": {
+    "message": "vor weniger als einer Minute"
+  }
 }

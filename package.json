@@ -13,7 +13,13 @@
     "url": "https://github.com/lukasleist/news-chrome-notifier/issues"
   },
   "homepage": "https://github.com/lukasleist/news-chrome-notifier#readme",
+  "dependencies": {
+    "@nextcloud/vue": "^7.1.0",
+    "vue": "^2.7.14"
+  },
   "devDependencies": {
+    "@vitejs/plugin-vue2": "^2.1.0",
+    "typescript": "^4.9.3",
     "vite-plugin-web-extension": "^1.4.6"
   },
   "scripts": {

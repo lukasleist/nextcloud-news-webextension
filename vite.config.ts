@@ -1,6 +1,7 @@
 import path from "path";
 import { defineConfig } from "vite";
 import webExtension, { readJsonFile } from "vite-plugin-web-extension";
+import vue from "@vitejs/plugin-vue2";
 
 export default defineConfig({
   root: "src",
@@ -10,6 +11,7 @@ export default defineConfig({
     emptyOutDir: true,
   },
   plugins: [
+    vue(),
     webExtension({
       manifest: () => {
         const packageJson = readJsonFile("package.json");
