@@ -1,10 +1,10 @@
 <template>
   <div class="wrapper">
     <form class="inner" @submit.prevent="auth">
-      <h1>{{ messages.title }}</h1>
+      <h1>{{ "optionsPageTitle" | i18n }}</h1>
       <div class="instructions">
         <div class="hint">
-          <span>{{ messages.hint }}</span>
+          <span>{{ "optionsPageHint" | i18n }}</span>
           <NcButton aria-label="Show Help" @click="showHelp = !showHelp">
             <template #icon>
               <HelpCircle fill-color="gray" :size="16" />
@@ -12,7 +12,7 @@
           </NcButton>
         </div>
         <div class="help">
-          <div v-if="showHelp" v-html="messages.help"></div>
+          <div v-if="showHelp" v-html="'optionsPageHelp' | i18n"></div>
         </div>
       </div>
 
@@ -46,20 +46,12 @@ export default {
     HelpCircle
   },
   data(){
-    const messages = {
-        title: chrome.i18n.getMessage("optionsPageTitle"),
-        hint: chrome.i18n.getMessage("optionsPageHint"),
-        help: chrome.i18n.getMessage("optionsPageHelp"),
-    };
-
     return {
       url: '',
-      showHelp: false,
-      messages
+      showHelp: false
     }
   },
   mounted() {
-    document.querySelector('head title').innerHTML = this.messages.title;
     chrome.storage.local.get('url', ({url=''}) => {
 		  this.url = url;
 	  });
