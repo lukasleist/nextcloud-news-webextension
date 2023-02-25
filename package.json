@@ -14,16 +14,27 @@
   },
   "homepage": "https://github.com/lukasleist/news-chrome-notifier#readme",
   "dependencies": {
-    "@nextcloud/vue": "^7.1.0",
+    "@nextcloud/vue": "^6.0.0",
     "vue": "^2.7.14"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue2": "^2.1.0",
-    "typescript": "^4.9.3",
-    "vite-plugin-web-extension": "^1.4.6"
+    "@types/webextension-polyfill": "^0.10.0",
+    "@vitejs/plugin-vue2": "^2.2.0",
+    "cross-env": "^7.0.3",
+    "npm-upgrade": "^3.1.0",
+    "typescript": "^4.9.5",
+    "vite-plugin-static-copy": "^0.13.0",
+    "vite-plugin-web-extension": "^1.4.9",
+    "webextension-polyfill": "^0.10.0"
   },
   "scripts": {
-    "dev": "vite build --watch",
-    "build": "vite build"
+    "dev:chrome": "cross-env TARGET_BROWSER=chrome vite build --watch",
+    "dev:firefox": "cross-env TARGET_BROWSER=firefox vite dev",
+    "build:chrome": "cross-env TARGET_BROWSER=chrome vite build",
+    "build:firefox": "cross-env TARGET_BROWSER=firefox vite build",
+    "upgrade": "npm-upgrade"
+  },
+  "prettier": {
+    "tabWidth": 2
   }
 }

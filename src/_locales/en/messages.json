@@ -11,8 +11,11 @@
   "optionsPageHelp": {
     "message": "Please enter an URL for a Nextcloud instance that has <a target=\"_blank\" href=\"https://apps.nextcloud.com/apps/news\"  >Nextcloud-News</a> installed. To authorize you will be redirected to your Nextcloud-Instance to grant this Webextension access."
   },
+  "popupPageTitle": {
+    "message": "Nextcloud News Webextension"
+  },
   "notAuthenticated": {
-    "message": "Nextcloud Server not authenticated: Authenticate in the Options Menu"
+    "message": "Configure connection to Nextcloud Server"
   },
   "openNextcloudNews": {
     "message": "Open Nextcloud News App"
@@ -26,13 +29,11 @@
   "markAsReadTitle": {
     "message": "mark as read"
   },
+  "expandShowExtraContent": {
+    "message": "show preview"
+  },
   "unreadArticlesHeading": {
-    "message": "Unread Articles: $count$",
-    "placeholders": {
-      "count": {
-        "content": "$1"
-      }
-    }
+    "message": "Nextcloud News unread articles:"
   },
   "daysAgo": {
     "message": "$days$ days ago",

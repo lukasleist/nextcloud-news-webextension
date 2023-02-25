@@ -1,4 +1,4 @@
-declare const chrome: any;
+import browser from "webextension-polyfill";
 
 export function pageTitleI18n(): void {
   const titleNode = document.querySelector("title");
@@ -12,6 +12,9 @@ export function pageTitleI18n(): void {
   console.log("Could not replace Page-Title with i18n-Message.");
 }
 
-export function i18n(messageKey: string): string {
-  return chrome.i18n.getMessage(messageKey);
+export function i18n(
+  messageName: string,
+  substitutions?: string | string[]
+): string {
+  return browser.i18n.getMessage(messageName, substitutions);
 }

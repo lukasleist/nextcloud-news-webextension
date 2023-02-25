@@ -11,8 +11,11 @@
   "optionsPageHelp": {
     "message": "Fügen Sie hier die URL einer Nextcloud-Instanz ein, bei der die <a target=\"_blank\" href=\"https://apps.nextcloud.com/apps/news\"  >Nextcloud-News</a> installiert ist. Für die Authorisierung werden sie im nächsten Schritt zu Ihrer Nextcloud Instanz weitergeleitet um diese Browsererweiterung zu Berechtigen."
   },
+  "popupPageTitle": {
+    "message": "Nextcloud News Webextension"
+  },
   "notAuthenticated": {
-    "message": "Anmeldung am Nextcloud Server fehlgeschlagen: Zum Anmelden in das Optionsmenü"
+    "message": "Verbindung zu Nextcloud Server einrichten"
   },
   "openNextcloudNews": {
     "message": "Nextcloud News App öffnen"
@@ -26,13 +29,11 @@
   "markAsReadTitle": {
     "message": "als gelesen markieren"
   },
+  "expandShowExtraContent": {
+    "message": "Vorschau anzeigen"
+  },
   "unreadArticlesHeading": {
-    "message": "Ungelesene Artikel: $count$",
-    "placeholders": {
-      "count": {
-        "content": "$1"
-      }
-    }
+    "message": "Nextcloud News ungelesene Artikel:"
   },
   "daysAgo": {
     "message": "vor $days$ Tagen",

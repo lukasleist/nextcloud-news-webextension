@@ -1,20 +1,55 @@
 {
-    "manifest_version": 3,
-    "description": "__MSG_extDescription__",
-    "options_page": "options/index.html",
-    "background": {
-        "service_worker": "background.js"
+  "{{chrome}}.manifest_version": 3,
+  "{{firefox}}.manifest_version": 2,
+  "description": "__MSG_extDescription__",
+  "{{chrome}}.options_page": "options/options.html",
+  "{{firefox}}.options_ui": {
+    "page": "options/options.html"
+  },
+  "background": {
+    "{{chrome}}.service_worker": "background.ts",
+    "{{firefox}}.scripts": [
+      "background.ts"
+    ],
+    "{{firefox}}.persistent": false
+  },
+  "{{chrome}}.action": {
+    "default_icon": {
+      "128": "assets/images/icon128.png"
     },
-    "action": {
-        "default_icon": {
-            "128": "assets/images/icon128.png"
-        },
-        "default_popup": "popup/index.html"
+    "default_popup": "popup/popup.html"
+  },
+  "{{firefox}}.browser_action": {
+    "default_icon": {
+      "128": "assets/images/icon128.png"
     },
-    "default_locale": "en",
-    "icons": {
-        "128": "assets/images/icon128.png"
-    },
-    "permissions": ["alarms", "storage", "unlimitedStorage", "background"],
-    "host_permissions": ["*://*/*"]
+    "default_popup": "popup/popup.html"
+  },
+  "default_locale": "en",
+  "icons": {
+    "128": "assets/images/icon128.png"
+  },
+  "{{chrome}}.permissions": [
+    "alarms",
+    "storage",
+    "unlimitedStorage",
+    "background"
+  ],
+  "{{chrome}}.host_permissions": [
+    "*://*/*"
+  ],
+  "{{firefox}}.permissions": [
+    "alarms",
+    "storage",
+    "unlimitedStorage",
+    "*://*/*"
+  ],
+  "{{maybe}}.permissions": [
+    "alarms",
+    "storage",
+    "unlimitedStorage",
+    "background",
+    "*://*/*",
+    "webNavigation"
+  ]
 }

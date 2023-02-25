@@ -34,39 +34,40 @@
     </form>
   </div>
 </template>
-<script lang="js">
-import NcTextField  from '@nextcloud/vue/dist/Components/NcTextField';
-import NcButton from '@nextcloud/vue/dist/Components/NcButton';
-import HelpCircle from 'vue-material-design-icons/HelpCircle.vue'
+<script lang="ts">
+import browser from "webextension-polyfill";
+import NcTextField from "@nextcloud/vue/dist/Components/NcTextField";
+import NcButton from "@nextcloud/vue/dist/Components/NcButton";
+import HelpCircle from "vue-material-design-icons/HelpCircle.vue";
 
 export default {
   components: {
     NcTextField,
     NcButton,
-    HelpCircle
+    HelpCircle,
   },
-  data(){
+  data() {
     return {
-      url: '',
-      showHelp: false
-    }
+      url: "",
+      showHelp: false,
+    };
   },
   mounted() {
-    chrome.storage.local.get('url', ({url=''}) => {
-		  this.url = url;
-	  });
+    browser.storage.local.get("url").then(({ url = "" }) => {
+      this.url = url;
+    });
   },
   methods: {
     auth() {
-      chrome.storage.local.clear(() => {
-        if (this.url[this.url.length - 1] == '/') {
+      browser.storage.local.clear().then(() => {
+        if (this.url[this.url.length - 1] == "/") {
           this.url = this.url.slice(0, -1);
         }
-        chrome.storage.local.set({url: this.url});
+        browser.storage.local.set({ url: this.url }).then();
       });
-    }
-  }
-}
+    },
+  },
+};
 </script>
 <style scoped>
 h1 {
