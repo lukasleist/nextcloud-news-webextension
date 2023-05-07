@@ -1,6 +1,6 @@
 {
   "name": "nextcloud-news-webextension",
-  "version": "0.5.0",
+  "version": "0.5",
   "description": "A simple extension for Google Chrome or Mozilla Firefox that displays unread articles from the Nextcloud News App",
   "private": true,
   "repository": {
@@ -20,6 +20,7 @@
   "devDependencies": {
     "@types/webextension-polyfill": "^0.10.0",
     "@vitejs/plugin-vue2": "^2.2.0",
+    "bestzip": "^2.2.1",
     "cross-env": "^7.0.3",
     "npm-upgrade": "^3.1.0",
     "typescript": "^4.9.5",
@@ -28,10 +29,11 @@
     "webextension-polyfill": "^0.10.0"
   },
   "scripts": {
+    "zip": "cd dist && bestzip ../nextcloud-news-webextension-${TARGET_BROWSER}_${npm_package_version}_.zip *",
     "dev:chrome": "cross-env TARGET_BROWSER=chrome vite build --watch",
     "dev:firefox": "cross-env TARGET_BROWSER=firefox vite dev",
-    "build:chrome": "cross-env TARGET_BROWSER=chrome vite build",
-    "build:firefox": "cross-env TARGET_BROWSER=firefox vite build",
+    "build:chrome": "cross-env TARGET_BROWSER=chrome vite build && npm run zip",
+    "build:firefox": "cross-env TARGET_BROWSER=firefox vite build && npm run zip",
     "upgrade": "npm-upgrade"
   },
   "prettier": {
