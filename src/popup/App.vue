@@ -13,9 +13,10 @@
         </a>
       </div>
     </div>
-    <UnreadCountHeader v-else-if="unreadCount" :url="url" :unreadCount="unreadCount" @reload="triggerUpdate"
+    <UnreadCountHeader v-else-if="unreadCount != null" :url="url" :unreadCount="unreadCount" @reload="triggerUpdate"
       @markAllAsRead="markAsRead" />
     <div class="feed">
+      <LoadingOverlay v-if="loading"></LoadingOverlay>
       <ul ref="articlesList" id="articles">
         <Article v-if="feedMetadata" v-for="article in articles" :key="article.id" :article="article"
           :feedMetadata="feedMetadata" @markAsRead="markAsRead"></Article>
@@ -26,8 +27,8 @@
 <script lang="ts">
 import browser from "webextension-polyfill";
 import { defineComponent } from "vue";
-import type { article } from "./Article.vue";
 import Article from "./Article.vue";
+import LoadingOverlay from "./LoadingOverlay.vue";
 import UnreadCountHeader from "./UnreadCountHeader.vue";
 import NcButton from "@nextcloud/vue/dist/Components/NcButton";
 import ArrowRight from 'vue-material-design-icons/ArrowRight.vue';
@@ -35,12 +36,14 @@ import ArrowRight from 'vue-material-design-icons/ArrowRight.vue';
 export default defineComponent({
   components: {
     Article,
+    LoadingOverlay,
     UnreadCountHeader,
     ArrowRight,
     NcButton
   },
   data() {
     return {
+      loading: false,
       authorization: <string | null>null,
       url: <string | null>null,
       unreadCount: <number | null>null,
@@ -49,6 +52,15 @@ export default defineComponent({
     };
   },
   mounted() {
+    browser.storage.local
+      .get([
+        "url",
+        "authorization"]).then(({
+          url,
+          authorization, }) => {
+          this.url = url;
+          this.authorization = authorization
+        });
     this.updateUi();
     browser.runtime.onMessage.addListener(({ command }) => {
       if (command == "updateUi") {
@@ -58,62 +70,43 @@ export default defineComponent({
   },
   methods: {
     triggerUpdate() {
+      this.loading = true;
       browser.runtime.sendMessage({ command: "update" }).then((value) => {
         console.log(value);
         this.updateUi();
-      });
+      }).then(_ => this.loading = false);
     },
+    /**
+     * Marks the articles with the given is as read, which triggers an update and should remove the article from the list
+     * if no article Ids are passed. All articles get marked as read.
+     * @param articleIds 
+     */
     markAsRead(articleIds?: number | number[]) {
-      if (articleIds) {
-        if (!(articleIds instanceof Array)) {
-          articleIds = [articleIds];
-        }
-        this.articles = <any>this.articles?.filter(
-          (value: article, index, array) => {
-            return !(<number[]>articleIds).includes(value.id);
-          }
-        );
+      if (!articleIds) {
+        this.loading = true;
+        articleIds = this.articles!.map(article => article.id);
       }
-
       browser.runtime.sendMessage({
         command: "markAsRead",
-        articleIds: articleIds,
-      });
+        articleIds: [articleIds].flat(),  //makes sure article Ids get passed as a List, even, if original is an atomic value
+      }).then(_ => this.loading = false);
     },
     updateUi() {
       browser.storage.local
         .get([
-          "url",
-          "authorization",
           "unreadCount",
           "unreadArticles",
           "feedMetadata",
         ])
         .then(
           ({
-            url,
-            authorization,
             unreadCount,
             unreadArticles,
             feedMetadata,
           }) => {
-            this.url = url;
-            this.authorization = authorization;
             this.unreadCount = unreadCount;
             this.articles = unreadArticles as any[];
             this.feedMetadata = feedMetadata;
-
-            if (authorization && url != null) {
-              if (this.articles) {
-                this.articles.sort((a: article, b: article) => {
-                  return a.pubDate > b.pubDate
-                    ? -1
-                    : a.pubDate < b.pubDate
-                      ? 1
-                      : 0;
-                });
-              }
-            }
           }
         );
     },
@@ -123,6 +116,7 @@ export default defineComponent({
 <style>
 .wrapper {
   padding: 0.65em;
+  margin-right: 0.65em;
   font-family: var(--font-face);
   color: var(--color-main-text);
 }
@@ -146,7 +140,9 @@ export default defineComponent({
   margin: 0 0.5em 0 0;
 }
 
-.feed {}
+.feed {
+  position: relative;
+}
 
 ul#articles {
   list-style: none;
@@ -167,18 +163,6 @@ ul#articles li:last-child {
   padding-bottom: 0em;
 }
 
-.article {
-  display: flex;
-  justify-content: space-between;
-}
-
-.title {
-  font-weight: bold;
-  font-size: 1.25em;
-  text-decoration: none;
-  color: var(--color-main-text);
-}
-
 .button-set {
   min-width: fit-content;
   margin-left: 1em;
@@ -187,7 +171,7 @@ ul#articles li:last-child {
 .button {
   width: 1.25rem;
   height: 1.25rem;
-  margin-left: auto;
+  margin-left: 3px;
   background-size: cover;
   background-color: unset;
   border: 2px #222 solid;
@@ -200,52 +184,5 @@ ul#articles li:last-child {
 
 .read-button {
   background-image: var(--icon-checkmark-000);
-}
-
-.site-info {
-  display: flex;
-  align-items: center;
-  margin-top: 0.2em;
-}
-
-.site-icon {
-  margin-right: 0.5em;
-}
-
-.article-teaser,
-.site-link {
-  font-weight: normal;
-  font-size: 1.1em;
-  color: var(--color-main-text);
-  text-decoration: none;
-  margin: 0;
-}
-
-.body-button {
-  background-image: var(--icon-triangle-n-000);
-}
-
-.body-button.hide-body {
-  background-image: var(--icon-triangle-s-000);
-}
-
-.body-info {
-  margin-top: 3px;
-  padding: 5px;
-  border-style: solid;
-  border-radius: 3px;
-  border-width: 1px;
-  border-color: var(--color-primary);
-  font-size: 1em;
-}
-
-.body-info.hide-body {
-  display: none;
-}
-
-.body-info img,
-.body-info iframe {
-  max-width: 100%;
-  height: auto;
 }
 </style>

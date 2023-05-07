@@ -1,9 +1,32 @@
 import browser from "webextension-polyfill";
 
+export type article = {
+  id: number;
+  guid: string;
+  guidHash: string;
+  url: string;
+  title: string;
+  author: string;
+  pubDate: number; //unix Timestamp
+  updatedDate: number; //unix Timestamp
+  body: string;
+  enclosureMime: any;
+  enclosureLink: any;
+  mediaThumbnail: any;
+  mediaDescription: any;
+  feedId: number;
+  unread: boolean;
+  starred: boolean;
+  lastModified: number; //unix Timestamp
+  rtl: boolean;
+  fingerprint: string;
+  contentHash: string;
+};
+
 function fetchApi(
-  endpoint: any,
+  endpoint: string,
   method = "GET",
-  body: any = undefined
+  body: any = undefined,
 ): Promise<any> {
   return browser.storage.local
     .get(["url", "authorization"])
@@ -14,7 +37,7 @@ function fetchApi(
         url = endpoint;
       }
       if (url.startsWith("http")) {
-        let options: any = {
+        const options: any = {
           method: method,
           headers: {
             "OCS-APIREQUEST": "true",
@@ -25,7 +48,7 @@ function fetchApi(
           options.headers["Authorization"] = authorization;
         }
 
-        if (body != undefined) {
+        if (body !== undefined) {
           options["body"] = JSON.stringify(body);
           options.headers["Content-Type"] = "application/json";
         }
@@ -40,20 +63,26 @@ function fetchApi(
 function update(): void {
   //update article list
   fetchApi(
-    "/index.php/apps/news/api/v1-2/items?type=3&getRead=false&batchSize=-1"
+    "/index.php/apps/news/api/v1-2/items?type=3&getRead=false&batchSize=-1",
   )
     .then((response) => response.json())
     .then((articles: any) => {
-      let unreadCount = articles.items.length;
+      const unreadCount = articles.items.length;
       console.log(`Fetched ${unreadCount} unread articles`);
 
       const action = browser.action ? browser.action : browser.browserAction;
       action.setBadgeText({
-        text: "" + unreadCount,
+        text: `${unreadCount}`,
       });
 
+      const sortedArticles = articles.items.toSorted(
+        (a: article, b: article) => {
+          return a.pubDate > b.pubDate ? -1 : a.pubDate < b.pubDate ? 1 : 0;
+        },
+      );
+
       return browser.storage.local.set({
-        unreadArticles: articles.items,
+        unreadArticles: sortedArticles,
         unreadCount: unreadCount,
       });
     })
@@ -68,7 +97,7 @@ function update(): void {
     .then((response) => response.json())
     .then((feeds: any) => {
       console.log(`loaded metadata for ${feeds.feeds.length} feeds`);
-      let feedMap: any = {};
+      const feedMap: any = {};
       feeds.feeds.forEach((feed: any) => {
         feedMap[feed.id] = feed;
       });
@@ -88,30 +117,15 @@ browser.alarms.onAlarm.addListener(update);
 console.log(`Scheduled refresh to run every ${periodInMinutes} minutes`);
 
 browser.runtime.onMessage.addListener(({ command, callback, articleIds }) => {
-  if (command == "update") {
+  if (command === "update") {
     update();
   }
-  if (command == "markAsRead") {
-    let markAsRead = (items: any) => {
-      if (!(items instanceof Array)) {
-        items = [items];
-      }
-      fetchApi("/index.php/apps/news/api/v1-2/items/read/multiple", "PUT", {
-        items: items,
-      })
-        .then((response) => response.json())
-        .then(update);
-    };
-    if (!articleIds) {
-      //if no particular ids are given, mark all as read
-      browser.storage.local.get("unreadArticles").then(({ unreadArticles }) => {
-        if (unreadArticles) {
-          const ids = unreadArticles.map((item: any) => item.id).slice(0, 99);
-          markAsRead(ids);
-        }
-      });
-    }
-    markAsRead(articleIds);
+  if (command === "markAsRead") {
+    fetchApi("/index.php/apps/news/api/v1-2/items/read/multiple", "PUT", {
+      items: articleIds,
+    })
+      .then((response) => response.json())
+      .then(update);
   }
 });
 
@@ -132,11 +146,11 @@ browser.storage.local.onChanged.addListener(({ url }) => {
           });
       }
 
-      fetchApi(url.newValue + "/index.php/login/v2", "POST").then(
+      fetchApi(`${url.newValue}/index.php/login/v2`, "POST").then(
         (response) => {
           response.json().then((flowInformation: any) => {
-            let pollEndpoint = flowInformation.poll.endpoint;
-            let body = {
+            const pollEndpoint = flowInformation.poll.endpoint;
+            const body = {
               token: flowInformation.poll.token,
             };
 
@@ -145,7 +159,7 @@ browser.storage.local.onChanged.addListener(({ url }) => {
             });
 
             function poll(r: any) {
-              if (r.status == 404) {
+              if (r.status === 404) {
                 fetchApi(pollEndpoint, "POST", body).then((rr) => {
                   setTimeout((_) => poll(rr), 1500);
                 });
@@ -156,7 +170,7 @@ browser.storage.local.onChanged.addListener(({ url }) => {
 
             poll({ status: 404 });
           });
-        }
+        },
       );
     });
   }

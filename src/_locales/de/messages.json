@@ -32,6 +32,9 @@
   "expandShowExtraContent": {
     "message": "Vorschau anzeigen"
   },
+  "hideExtraContent": {
+    "message": "Vorschau ausblenden"
+  },
   "unreadArticlesHeading": {
     "message": "Nextcloud News ungelesene Artikel:"
   },

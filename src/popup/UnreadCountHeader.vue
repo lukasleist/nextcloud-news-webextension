@@ -1,5 +1,5 @@
 <template>
-    <div v-if="unreadCount" class="unread-header-wrapper">
+    <div class="unread-header-wrapper">
         <span class="unread-count-heading">
             <h3>
                 {{ "unreadArticlesHeading" | i18n }}
@@ -52,7 +52,6 @@ export default {
 }
 
 h3 {
-    font-weight: normal;
     margin: 0 0.5em 0 0;
 }
 
